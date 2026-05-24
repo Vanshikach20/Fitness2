@@ -1,0 +1,134 @@
+<div class="auth-container">
+  <div class="container py-4">
+    <div class="row justify-content-center">
+      <div class="col-lg-5 col-md-7">
+
+        <!-- Logo & Title -->
+        <div class="text-center mb-4 animate-fadeInUp">
+          <div class="auth-icon-wrap mb-3">
+            <span class="material-icons">person_add</span>
+          </div>
+          <h2 class="auth-title">Create Account</h2>
+          <p class="auth-subtitle">Join FitTrack and start your fitness journey</p>
+        </div>
+
+        <!-- Alert -->
+        <div *ngIf="alertMessage" class="alert alert-dismissible fade show animate-fadeInUp"
+             [ngClass]="alertClass" role="alert">
+          {{ alertMessage }}
+          <button type="button" class="btn-close" (click)="alertMessage = null"></button>
+        </div>
+
+        <!-- Register Form -->
+        <div class="auth-card animate-fadeInUp">
+          <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+
+            <div class="form-group mb-4">
+              <label class="form-label">
+                <span class="material-icons me-1">person</span> Full Name
+              </label>
+              <input formControlName="fullName" type="text" class="form-control custom-input"
+                     placeholder="John Doe" autocomplete="name" maxlength="100" />
+              <div *ngIf="registerForm.get('fullName')?.touched && registerForm.get('fullName')?.invalid">
+                <div class="error-text" *ngIf="registerForm.get('fullName')?.hasError('required')">
+                  Full name is required.
+                </div>
+                <div class="error-text" *ngIf="registerForm.get('fullName')?.hasError('minlength')">
+                  Must be at least 2 characters.
+                </div>
+                <div class="error-text" *ngIf="registerForm.get('fullName')?.hasError('maxlength')">
+                  Cannot exceed 100 characters.
+                </div>
+                <div class="error-text" *ngIf="registerForm.get('fullName')?.hasError('pattern')">
+                  Only letters and spaces allowed.
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group mb-4">
+              <label class="form-label">
+                <span class="material-icons me-1">email</span> Email
+              </label>
+              <input formControlName="email" type="email" class="form-control custom-input"
+                     placeholder="your@email.com" autocomplete="email" maxlength="100" />
+              <div *ngIf="registerForm.get('email')?.touched && registerForm.get('email')?.invalid">
+                <div class="error-text" *ngIf="registerForm.get('email')?.hasError('required')">
+                  Email is required.
+                </div>
+                <div class="error-text" *ngIf="registerForm.get('email')?.hasError('email')">
+                  Please enter a valid email address.
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group mb-4">
+              <label class="form-label">
+                <span class="material-icons me-1">lock</span> Password
+              </label>
+              <input formControlName="password" type="password" class="form-control custom-input"
+                     placeholder="Min 8 chars, uppercase, lowercase, number & symbol" autocomplete="new-password" maxlength="100" />
+              <div *ngIf="registerForm.get('password')?.touched">
+                <div class="error-text" *ngIf="registerForm.get('password')?.hasError('required')">
+                  Password is required.
+                </div>
+                <div class="error-text" *ngIf="registerForm.get('password')?.hasError('minlength')">
+                  Must be at least 8 characters.
+                </div>
+              </div>
+              <!-- Password strength checklist -->
+              <div class="pw-checklist mt-2" *ngIf="registerForm.get('password')?.touched && pwValue.length > 0">
+                <div class="pw-rule" [class.pw-pass]="hasMinLength" [class.pw-fail]="!hasMinLength">
+                  <span class="material-icons pw-icon">{{ hasMinLength ? 'check_circle' : 'cancel' }}</span>
+                  At least 8 characters
+                </div>
+                <div class="pw-rule" [class.pw-pass]="hasUppercase" [class.pw-fail]="!hasUppercase">
+                  <span class="material-icons pw-icon">{{ hasUppercase ? 'check_circle' : 'cancel' }}</span>
+                  One uppercase letter (A-Z)
+                </div>
+                <div class="pw-rule" [class.pw-pass]="hasLowercase" [class.pw-fail]="!hasLowercase">
+                  <span class="material-icons pw-icon">{{ hasLowercase ? 'check_circle' : 'cancel' }}</span>
+                  One lowercase letter (a-z)
+                </div>
+                <div class="pw-rule" [class.pw-pass]="hasDigit" [class.pw-fail]="!hasDigit">
+                  <span class="material-icons pw-icon">{{ hasDigit ? 'check_circle' : 'cancel' }}</span>
+                  One number (0-9)
+                </div>
+                <div class="pw-rule" [class.pw-pass]="hasSpecial" [class.pw-fail]="!hasSpecial">
+                  <span class="material-icons pw-icon">{{ hasSpecial ? 'check_circle' : 'cancel' }}</span>
+                  One special character (!&#64;#$%^&amp;*...)
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group mb-4">
+              <label class="form-label">
+                <span class="material-icons me-1">lock_clock</span> Confirm Password
+              </label>
+              <input formControlName="confirmPassword" type="password" class="form-control custom-input"
+                     placeholder="Re-enter your password" autocomplete="new-password" />
+              <div class="error-text"
+                   *ngIf="registerForm.get('confirmPassword')?.touched && registerForm.get('confirmPassword')?.hasError('required')">
+                Please confirm your password.
+              </div>
+              <div class="error-text" *ngIf="passwordMismatch">
+                Passwords do not match.
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-glow w-100 mb-3"
+                    [disabled]="registerForm.invalid || passwordMismatch || !isPasswordStrong || isSubmitting">
+              <span class="material-icons me-2">{{ isSubmitting ? 'hourglass_top' : 'how_to_reg' }}</span>
+              {{ isSubmitting ? 'Creating Account...' : 'Create Account' }}
+            </button>
+
+            <p class="text-center auth-link-text">
+              Already have an account?
+              <a routerLink="/login" class="auth-link">Sign in</a>
+            </p>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

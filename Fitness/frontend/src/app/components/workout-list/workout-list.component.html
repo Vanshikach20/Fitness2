@@ -1,0 +1,91 @@
+<div class="container py-4">
+  <h2 class="text-center text-primary mb-4">Fitness Activity Tracker</h2>
+
+  <div *ngIf="alertMessage" class="alert" [ngClass]="alertClass" role="alert">
+    {{ alertMessage }}
+  </div>
+
+  <div class="row mb-3">
+    <div class="col-md-6">
+      <div class="card shadow-sm mb-3">
+        <div class="card-body">
+          <h5 class="card-title">Monthly Calories Burned</h5>
+          <p class="card-text display-6 text-success">{{ monthlyCalories | number }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card shadow-sm mb-3">
+        <div class="card-body">
+          <h5 class="card-title">Total Workouts</h5>
+          <p class="card-text display-6 text-info">{{ workoutsToDisplay.length }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <form [formGroup]="workoutForm" (ngSubmit)="onSubmit()" class="row g-3 mb-4 bg-light p-3 rounded shadow-sm">
+    <div class="col-md-3">
+      <label for="activityName" class="form-label">Activity Name</label>
+      <input id="activityName" formControlName="activityName" class="form-control" placeholder="e.g. Running, Cycling" required />
+      <div *ngIf="workoutForm.get('activityName')?.invalid && workoutForm.get('activityName')?.touched" class="invalid-feedback d-block">Activity name is required.</div>
+    </div>
+    <div class="col-md-2">
+      <label for="duration" class="form-label">Duration (min)</label>
+      <input id="duration" formControlName="duration" type="number" class="form-control" placeholder="Duration (min)" required min="1" />
+      <div *ngIf="workoutForm.get('duration')?.invalid && workoutForm.get('duration')?.touched" class="invalid-feedback d-block">Duration must be at least 1 minute.</div>
+    </div>
+    <div class="col-md-3">
+      <label for="caloriesBurned" class="form-label">Calories Burned</label>
+      <input id="caloriesBurned" formControlName="caloriesBurned" type="number" class="form-control" placeholder="Calories Burned" required min="1" />
+      <div *ngIf="workoutForm.get('caloriesBurned')?.invalid && workoutForm.get('caloriesBurned')?.touched" class="invalid-feedback d-block">Calories must be at least 1.</div>
+    </div>
+    <div class="col-md-3">
+      <label for="date" class="form-label">Date</label>
+      <input id="date" formControlName="date" type="date" class="form-control" required />
+      <div *ngIf="workoutForm.get('date')?.invalid && workoutForm.get('date')?.touched" class="invalid-feedback d-block">Date is required.</div>
+    </div>
+    <div class="col-md-1 d-flex align-items-end">
+      <button type="submit" class="btn btn-primary w-100" [disabled]="workoutForm.invalid">{{ editMode ? 'Update' : 'Add' }}</button>
+    </div>
+    <div class="col-md-1 d-flex align-items-end" *ngIf="editMode">
+      <button type="button" class="btn btn-secondary w-100" (click)="resetForm()">Cancel</button>
+    </div>
+  </form>
+
+  <div class="mb-4">
+    <label for="activityFilter" class="form-label">Filter by Activity:</label>
+    <input id="activityFilter" [(ngModel)]="activityFilter" (ngModelChange)="filterByActivity()" class="form-control" placeholder="e.g. Running" />
+  </div>
+
+  <div class="table-responsive">
+    <table class="table table-striped table-hover align-middle workout-table">
+      <thead class="table-primary">
+        <tr>
+          <th>ID</th>
+          <th>Activity</th>
+          <th>Duration (min)</th>
+          <th>Calories</th>
+          <th>Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let workout of workoutsToDisplay">
+          <td>{{ workout.id }}</td>
+          <td><span class="badge bg-info text-dark fs-6">{{ workout.activityName }}</span></td>
+          <td>{{ workout.duration }}</td>
+          <td>{{ workout.caloriesBurned }}</td>
+          <td>{{ workout.date | date:'mediumDate' }}</td>
+          <td>
+            <button class="btn btn-outline-success btn-sm me-2" title="Edit" (click)="editWorkout(workout)"><span class="material-icons">edit</span></button>
+            <button class="btn btn-outline-danger btn-sm" title="Delete" (click)="deleteWorkout(workout.id!)"><span class="material-icons">delete</span></button>
+          </td>
+        </tr>
+        <tr *ngIf="!workoutsToDisplay.length">
+          <td colspan="6" class="text-center text-muted">No workouts found.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

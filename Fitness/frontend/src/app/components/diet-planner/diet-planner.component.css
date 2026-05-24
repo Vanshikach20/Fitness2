@@ -1,0 +1,258 @@
+/* ============================================================
+   DIET PLANNER – Component Styles
+   Uses CSS variables from the global theme (styles.css)
+   ============================================================ */
+
+/* ---------- Wrapper ---------- */
+.diet-planner-wrapper {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 90px 1rem 2rem;
+}
+
+/* ---------- Fade-in animation ---------- */
+.animate-fadeInUp {
+  animation: fadeInUp 0.5s ease-out;
+}
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ---------- Section header ---------- */
+.section-icon {
+  font-size: 48px;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 0.5rem;
+}
+.text-muted-custom {
+  color: var(--text-muted);
+}
+
+/* ---------- Form ---------- */
+.diet-form .form-label {
+  font-weight: 600;
+  margin-bottom: 0.35rem;
+  color: var(--text-primary);
+}
+.diet-form .form-control,
+.diet-form .form-select {
+  background: var(--card-bg);
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+.diet-form .form-control:focus,
+.diet-form .form-select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 0.2rem rgba(0, 255, 136, 0.15);
+}
+.diet-form .input-group-text {
+  background: var(--card-bg);
+  color: var(--text-muted);
+  border-color: var(--border-color);
+}
+.diet-form .input-group-text .material-icons {
+  font-size: 20px;
+}
+
+/* ---------- Goal cards ---------- */
+.goal-cards {
+  justify-content: center;
+}
+.goal-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 1.2rem 2rem;
+  border-radius: 12px;
+  border: 2px solid var(--border-color);
+  background: var(--card-bg);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: var(--text-primary);
+  min-width: 140px;
+}
+.goal-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+.goal-card.active {
+  border-color: var(--accent);
+  background: rgba(0, 255, 136, 0.08);
+  box-shadow: 0 0 0 3px rgba(0, 255, 136, 0.15);
+}
+.goal-icon {
+  font-size: 36px;
+  color: var(--accent);
+}
+.goal-label {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+/* ---------- Stat cards ---------- */
+.stat-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  height: 100%;
+}
+.stat-card.mini {
+  flex-direction: column;
+  text-align: center;
+  padding: 1rem 0.75rem;
+}
+.stat-icon-wrap {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.stat-icon-wrap .material-icons {
+  font-size: 26px;
+}
+.cal-icon {
+  background: rgba(255, 107, 53, 0.12);
+  color: #ff6b35;
+}
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--text-primary);
+}
+.stat-label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+/* ---------- Diet type toggle ---------- */
+.diet-toggle-row .btn-group .btn {
+  border-radius: 8px !important;
+  font-weight: 600;
+  padding: 0.45rem 1.2rem;
+}
+
+/* ---------- Day tabs ---------- */
+.day-tabs {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+.day-tab {
+  padding: 0.5rem 1.2rem;
+  border: 2px solid var(--border-color);
+  border-radius: 10px;
+  background: var(--card-bg);
+  color: var(--text-primary);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+.day-tab:hover {
+  border-color: var(--accent);
+}
+.day-tab.active {
+  background: var(--accent);
+  color: #000;
+  border-color: var(--accent);
+}
+
+/* ---------- Meal timeline ---------- */
+.meal-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.meal-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  overflow: hidden;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.meal-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+}
+.meal-time-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 1rem;
+  background: rgba(0, 255, 136, 0.1);
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 0.85rem;
+  border-bottom-right-radius: 10px;
+}
+.meal-time-badge .material-icons {
+  font-size: 16px;
+}
+.meal-body {
+  padding: 0.75rem 1.2rem 1rem;
+}
+.meal-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+.meal-icon {
+  font-size: 28px;
+  color: var(--accent);
+}
+.meal-header h5 {
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--text-primary);
+}
+.meal-description {
+  font-size: 0.95rem;
+  color: var(--text-secondary, var(--text-primary));
+  line-height: 1.5;
+  padding-left: 2.3rem;
+}
+
+/* ---------- Tips section ---------- */
+.tips-section {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  padding: 1.2rem 1.5rem;
+}
+.tips-section h5 {
+  color: var(--accent);
+}
+.tips-section ul {
+  padding-left: 1.2rem;
+}
+.tips-section li {
+  margin-bottom: 0.4rem;
+  color: var(--text-primary);
+  font-size: 0.93rem;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 576px) {
+  .goal-card {
+    padding: 0.8rem 1.2rem;
+    min-width: 110px;
+  }
+  .goal-icon { font-size: 28px; }
+  .stat-value { font-size: 1.2rem; }
+  .day-tab { padding: 0.4rem 0.9rem; font-size: 0.85rem; }
+  .meal-description { padding-left: 0; }
+}

@@ -1,0 +1,277 @@
+<!-- ============================================================
+     DIET PLANNER – fully self-contained, no backend dependency
+     ============================================================ -->
+<div class="diet-planner-wrapper animate-fadeInUp">
+
+  <!-- ========== INPUT FORM ========== -->
+  <section *ngIf="!showResults" class="form-section">
+    <div class="section-header text-center mb-4">
+      <span class="material-icons section-icon">restaurant_menu</span>
+      <h2 class="fw-bold">Personalized Diet Planner</h2>
+      <p class="text-muted-custom">Get a tailored 7-day meal plan based on your body metrics &amp; goals</p>
+    </div>
+
+    <form [formGroup]="dietForm" (ngSubmit)="onSubmit()" class="diet-form">
+      <div class="row g-3">
+
+        <!-- Weight -->
+        <div class="col-md-6">
+          <label class="form-label">Weight (kg)</label>
+          <div class="input-group">
+            <span class="input-group-text"><span class="material-icons">monitor_weight</span></span>
+            <input type="number" class="form-control" formControlName="weight"
+                   placeholder="e.g. 70" min="20" max="300">
+          </div>
+          <div *ngIf="dietForm.get('weight')?.touched && dietForm.get('weight')?.invalid">
+            <div class="text-danger small mt-1" *ngIf="dietForm.get('weight')?.hasError('required')">
+              Weight is required.
+            </div>
+            <div class="text-danger small mt-1" *ngIf="dietForm.get('weight')?.hasError('min')">
+              Minimum weight is 20 kg.
+            </div>
+            <div class="text-danger small mt-1" *ngIf="dietForm.get('weight')?.hasError('max')">
+              Maximum weight is 300 kg.
+            </div>
+          </div>
+        </div>
+
+        <!-- Height -->
+        <div class="col-md-6">
+          <label class="form-label">Height (cm)</label>
+          <div class="input-group">
+            <span class="input-group-text"><span class="material-icons">height</span></span>
+            <input type="number" class="form-control" formControlName="height"
+                   placeholder="e.g. 170" min="100" max="250">
+          </div>
+          <div *ngIf="dietForm.get('height')?.touched && dietForm.get('height')?.invalid">
+            <div class="text-danger small mt-1" *ngIf="dietForm.get('height')?.hasError('required')">
+              Height is required.
+            </div>
+            <div class="text-danger small mt-1" *ngIf="dietForm.get('height')?.hasError('min')">
+              Minimum height is 100 cm.
+            </div>
+            <div class="text-danger small mt-1" *ngIf="dietForm.get('height')?.hasError('max')">
+              Maximum height is 250 cm.
+            </div>
+          </div>
+        </div>
+
+        <!-- Age -->
+        <div class="col-md-4">
+          <label class="form-label">Age</label>
+          <div class="input-group">
+            <span class="input-group-text"><span class="material-icons">cake</span></span>
+            <input type="number" class="form-control" formControlName="age"
+                   placeholder="e.g. 25" min="10" max="100">
+          </div>
+          <div *ngIf="dietForm.get('age')?.touched && dietForm.get('age')?.invalid">
+            <div class="text-danger small mt-1" *ngIf="dietForm.get('age')?.hasError('required')">
+              Age is required.
+            </div>
+            <div class="text-danger small mt-1" *ngIf="dietForm.get('age')?.hasError('min')">
+              Minimum age is 10.
+            </div>
+            <div class="text-danger small mt-1" *ngIf="dietForm.get('age')?.hasError('max')">
+              Maximum age is 100.
+            </div>
+          </div>
+        </div>
+
+        <!-- Gender -->
+        <div class="col-md-4">
+          <label class="form-label">Gender</label>
+          <select class="form-select" formControlName="gender">
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+          </select>
+        </div>
+
+        <!-- Activity Level -->
+        <div class="col-md-4">
+          <label class="form-label">Activity Level</label>
+          <select class="form-select" formControlName="activityLevel">
+            <option value="sedentary">Sedentary (office job)</option>
+            <option value="light">Light (1-2 days/week)</option>
+            <option value="moderate">Moderate (3-5 days/week)</option>
+            <option value="active">Active (6-7 days/week)</option>
+            <option value="very_active">Very Active (athlete)</option>
+          </select>
+        </div>
+
+        <!-- Goal -->
+        <div class="col-12">
+          <label class="form-label fw-semibold">Your Goal</label>
+          <div class="goal-cards d-flex gap-3 flex-wrap">
+            <label class="goal-card" [class.active]="dietForm.get('goal')?.value === 'lose'">
+              <input type="radio" formControlName="goal" value="lose" class="d-none">
+              <span class="material-icons goal-icon">trending_down</span>
+              <span class="goal-label">Lose Weight</span>
+            </label>
+            <label class="goal-card" [class.active]="dietForm.get('goal')?.value === 'maintain'">
+              <input type="radio" formControlName="goal" value="maintain" class="d-none">
+              <span class="material-icons goal-icon">balance</span>
+              <span class="goal-label">Maintain</span>
+            </label>
+            <label class="goal-card" [class.active]="dietForm.get('goal')?.value === 'gain'">
+              <input type="radio" formControlName="goal" value="gain" class="d-none">
+              <span class="material-icons goal-icon">trending_up</span>
+              <span class="goal-label">Gain Weight</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Submit -->
+        <div class="col-12 text-center mt-4">
+          <button type="submit" class="btn btn-success btn-lg px-5"
+                  [disabled]="dietForm.invalid">
+            <span class="material-icons align-middle me-2">auto_awesome</span>
+            Generate My Diet Plan
+          </button>
+        </div>
+      </div>
+    </form>
+  </section>
+
+  <!-- ========== RESULTS ========== -->
+  <section *ngIf="showResults" class="results-section animate-fadeInUp">
+
+    <!-- Top bar -->
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+      <h2 class="fw-bold mb-0">
+        <span class="material-icons align-middle me-2 text-success">eco</span>
+        Your {{ getGoalLabel() }} Diet Plan
+      </h2>
+      <button class="btn btn-outline-secondary" (click)="reset()">
+        <span class="material-icons align-middle me-1">arrow_back</span> Modify Inputs
+      </button>
+    </div>
+
+    <!-- Stats Row -->
+    <div class="row g-3 mb-4">
+      <!-- BMI Card -->
+      <div class="col-sm-6 col-lg-3">
+        <div class="stat-card">
+          <div class="stat-icon-wrap" [style.background]="getBmiColor() + '22'"
+               [style.color]="getBmiColor()">
+            <span class="material-icons">speed</span>
+          </div>
+          <div>
+            <div class="stat-value">{{ bmi }}</div>
+            <div class="stat-label">BMI — {{ bmiCategory }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Target Calories -->
+      <div class="col-sm-6 col-lg-3">
+        <div class="stat-card">
+          <div class="stat-icon-wrap cal-icon">
+            <span class="material-icons">local_fire_department</span>
+          </div>
+          <div>
+            <div class="stat-value">{{ targetCalories }}</div>
+            <div class="stat-label">Daily Calories (kcal)</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Protein -->
+      <div class="col-sm-6 col-lg-2">
+        <div class="stat-card mini">
+          <div class="stat-value">{{ proteinGrams }}g</div>
+          <div class="stat-label">Protein</div>
+        </div>
+      </div>
+
+      <!-- Carbs -->
+      <div class="col-sm-6 col-lg-2">
+        <div class="stat-card mini">
+          <div class="stat-value">{{ carbGrams }}g</div>
+          <div class="stat-label">Carbs</div>
+        </div>
+      </div>
+
+      <!-- Fat -->
+      <div class="col-sm-6 col-lg-2">
+        <div class="stat-card mini">
+          <div class="stat-value">{{ fatGrams }}g</div>
+          <div class="stat-label">Fat</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Diet Type Toggle -->
+    <div class="diet-toggle-row d-flex align-items-center gap-3 mb-4 flex-wrap">
+      <span class="fw-semibold">Diet Preference:</span>
+      <div class="btn-group" role="group">
+        <button type="button" class="btn"
+                [class.btn-success]="dietType === 'veg'"
+                [class.btn-outline-secondary]="dietType !== 'veg'"
+                (click)="dietType = 'veg'">
+          <span class="material-icons align-middle me-1" style="font-size:18px">eco</span> Vegetarian
+        </button>
+        <button type="button" class="btn"
+                [class.btn-danger]="dietType === 'nonveg'"
+                [class.btn-outline-secondary]="dietType !== 'nonveg'"
+                (click)="dietType = 'nonveg'">
+          <span class="material-icons align-middle me-1" style="font-size:18px">set_meal</span> Non-Vegetarian
+        </button>
+      </div>
+    </div>
+
+    <!-- Day Tabs -->
+    <div class="day-tabs mb-4">
+      <button *ngFor="let dp of weekPlan; let i = index"
+              class="day-tab"
+              [class.active]="selectedDay === i"
+              (click)="selectedDay = i">
+        {{ dp.day.substring(0, 3) }}
+      </button>
+    </div>
+
+    <!-- Selected day heading -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h4 class="fw-bold mb-0">{{ weekPlan[selectedDay].day }}</h4>
+      <span class="badge bg-info fs-6">
+        ~{{ weekPlan[selectedDay].totalCalories }} kcal
+      </span>
+    </div>
+
+    <!-- Meal Cards -->
+    <div class="meal-timeline">
+      <div *ngFor="let meal of weekPlan[selectedDay].meals" class="meal-card">
+        <div class="meal-time-badge">
+          <span class="material-icons">schedule</span>
+          {{ meal.time }}
+        </div>
+        <div class="meal-body">
+          <div class="meal-header">
+            <span class="material-icons meal-icon">{{ meal.icon }}</span>
+            <h5 class="mb-0">{{ meal.label }}</h5>
+            <span class="badge bg-secondary ms-auto">~{{ meal.calories }} kcal</span>
+          </div>
+          <p class="meal-description mb-0">
+            {{ dietType === 'veg' ? meal.vegOption : meal.nonVegOption }}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tips Section -->
+    <div class="tips-section mt-4">
+      <h5 class="fw-bold"><span class="material-icons align-middle me-2">tips_and_updates</span>Tips</h5>
+      <ul class="mb-0">
+        <li>Drink at least 3–4 litres of water throughout the day.</li>
+        <li>Avoid processed/junk food and sugar-sweetened beverages.</li>
+        <li>Try to have dinner at least 2 hours before sleeping.</li>
+        <li>Adjust portion sizes based on how your body responds over 2 weeks.</li>
+        <li *ngIf="dietForm.get('goal')?.value === 'gain'">
+          Add a bedtime snack (glass of milk + 5 almonds) if you feel hungry at night.
+        </li>
+        <li *ngIf="dietForm.get('goal')?.value === 'lose'">
+          Avoid eating after 8 PM. Try intermittent fasting (16:8) if comfortable.
+        </li>
+      </ul>
+    </div>
+  </section>
+</div>

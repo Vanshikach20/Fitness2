@@ -1,0 +1,125 @@
+<div class="edit-activity-container">
+  <div class="container py-4">
+    <div class="row justify-content-center">
+      <div class="col-lg-7 col-md-9">
+        <!-- Page Header -->
+        <div class="page-header text-center mb-4 animate-fadeInUp">
+          <div class="header-icon-wrap mb-3">
+            <span class="material-icons">edit_note</span>
+          </div>
+          <h2 class="page-title">Edit Activity</h2>
+          <p class="page-subtitle">Update your workout details below</p>
+        </div>
+
+        <!-- Loading -->
+        <div *ngIf="isLoading" class="text-center py-5">
+          <div class="spinner"></div>
+          <p class="text-muted mt-3">Loading workout data...</p>
+        </div>
+
+        <!-- Alert -->
+        <div *ngIf="alertMessage" class="alert alert-dismissible fade show animate-fadeInUp"
+             [ngClass]="alertClass" role="alert">
+          {{ alertMessage }}
+          <button type="button" class="btn-close" (click)="alertMessage = null"></button>
+        </div>
+
+        <!-- Form Card -->
+        <div class="form-card animate-fadeInUp" *ngIf="!isLoading">
+          <form [formGroup]="workoutForm" (ngSubmit)="onSubmit()">
+            <!-- Activity Name -->
+            <div class="form-group mb-4">
+              <label class="form-label">
+                <span class="material-icons me-1">directions_run</span> Activity Name
+              </label>
+              <input formControlName="activityName" type="text" class="form-control custom-input"
+                     placeholder="e.g. Running, Cycling, Yoga..." maxlength="50" />
+              <div *ngIf="workoutForm.get('activityName')?.touched && workoutForm.get('activityName')?.invalid">
+                <div class="error-text" *ngIf="workoutForm.get('activityName')?.hasError('required')">
+                  Activity name is required.
+                </div>
+                <div class="error-text" *ngIf="workoutForm.get('activityName')?.hasError('minlength')">
+                  Must be at least 2 characters.
+                </div>
+                <div class="error-text" *ngIf="workoutForm.get('activityName')?.hasError('maxlength')">
+                  Cannot exceed 50 characters.
+                </div>
+                <div class="error-text" *ngIf="workoutForm.get('activityName')?.hasError('pattern')">
+                  Only letters, spaces and hyphens allowed.
+                </div>
+              </div>
+            </div>
+
+            <!-- Duration -->
+            <div class="form-group mb-4">
+              <label class="form-label">
+                <span class="material-icons me-1">timer</span> Duration (minutes)
+              </label>
+              <input formControlName="duration" type="number" class="form-control custom-input"
+                     placeholder="Enter duration in minutes" min="1" max="1440" />
+              <div *ngIf="workoutForm.get('duration')?.touched && workoutForm.get('duration')?.invalid">
+                <div class="error-text" *ngIf="workoutForm.get('duration')?.hasError('required')">
+                  Duration is required.
+                </div>
+                <div class="error-text" *ngIf="workoutForm.get('duration')?.hasError('min')">
+                  Must be at least 1 minute.
+                </div>
+                <div class="error-text" *ngIf="workoutForm.get('duration')?.hasError('max')">
+                  Cannot exceed 1440 minutes (24 hours).
+                </div>
+              </div>
+            </div>
+
+            <!-- Calories -->
+            <div class="form-group mb-4">
+              <label class="form-label">
+                <span class="material-icons me-1">local_fire_department</span> Calories Burned
+              </label>
+              <input formControlName="caloriesBurned" type="number" class="form-control custom-input"
+                     placeholder="Enter calories burned" min="1" max="50000" />
+              <div *ngIf="workoutForm.get('caloriesBurned')?.touched && workoutForm.get('caloriesBurned')?.invalid">
+                <div class="error-text" *ngIf="workoutForm.get('caloriesBurned')?.hasError('required')">
+                  Calories burned is required.
+                </div>
+                <div class="error-text" *ngIf="workoutForm.get('caloriesBurned')?.hasError('min')">
+                  Must be at least 1 calorie.
+                </div>
+                <div class="error-text" *ngIf="workoutForm.get('caloriesBurned')?.hasError('max')">
+                  Cannot exceed 50,000 calories.
+                </div>
+              </div>
+            </div>
+
+            <!-- Date -->
+            <div class="form-group mb-4">
+              <label class="form-label">
+                <span class="material-icons me-1">calendar_today</span> Date
+              </label>
+              <input formControlName="date" type="date" class="form-control custom-input" [max]="today" />
+              <div *ngIf="workoutForm.get('date')?.touched && workoutForm.get('date')?.invalid">
+                <div class="error-text" *ngIf="workoutForm.get('date')?.hasError('required')">
+                  Date is required.
+                </div>
+                <div class="error-text" *ngIf="workoutForm.get('date')?.hasError('futureDate')">
+                  Date cannot be in the future.
+                </div>
+              </div>
+            </div>
+
+            <!-- Buttons -->
+            <div class="d-flex gap-3 mt-4">
+              <button type="submit" class="btn btn-glow flex-grow-1"
+                      [disabled]="workoutForm.invalid || isSubmitting">
+                <span class="material-icons me-2">{{ isSubmitting ? 'hourglass_top' : 'save' }}</span>
+                {{ isSubmitting ? 'Updating...' : 'Update Activity' }}
+              </button>
+              <a routerLink="/dashboard" class="btn btn-outline-cancel">
+                <span class="material-icons me-1">arrow_back</span> Cancel
+              </a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
